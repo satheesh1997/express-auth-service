@@ -15,12 +15,12 @@ const UserSchema = new mongoose.Schema(
         },
         firstName: {
             type: String,
-            required: true,
+            required: [true, 'First Name field required'],
             trim: true
         },
         lastName: {
             type: String,
-            required: true,
+            required:  [true, 'Last Name field required'],
             trim: true
         },
         email: {
@@ -91,7 +91,7 @@ UserSchema.methods = {
 }
 
 // plugins
-UserSchema.plugin(uniqueValidator);
+UserSchema.plugin(uniqueValidator, {message : '{PATH} already exists. Try different one.'});
 
 // signals
 UserSchema.pre('save', function(cb) {

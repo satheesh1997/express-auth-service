@@ -1,6 +1,13 @@
 const MongooseErrors = require('mongoose').Error;
 
 
+const validationErrorFormat = (err) => {
+    let error = {};
+    error.message = err._message;
+    error.fields = Object.keys(err.errors).map((field)=> ({[field] : err.errors[field].message}));
+    return error;
+}
+
 const errorHandler = (err, req, res, next) => {
 
     // Skip for already handled error
@@ -9,7 +16,7 @@ const errorHandler = (err, req, res, next) => {
     }
 
     if(err instanceof MongooseErrors.ValidationError){
-        res.status(400).json(err);
+        res.status(400).json(validationErrorFormat(err));
     }
 }
 
