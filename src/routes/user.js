@@ -1,6 +1,7 @@
 const bCrypt = require('bcrypt');
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const Users = require('../models/user.js');
 
 const router = express.Router();
@@ -13,9 +14,10 @@ router.post('/create', (req, res, next) => {
         email: req.body.email,
         password: req.body.password
     };
+
     Users.create(userData, (err, user) => {
         if (err) next(err);
-        else res.status(201).json({_id: user._id});
+        else return res.status(201).json({_id: user._id});
     });
 });
 
@@ -26,11 +28,12 @@ router.post('/login', (req, res, next) => {
             password
         }
     } = req;
+
     Users.findByEmail(email, (err, user) => {
         if (err) next(err);
         else {
-            if (user == null) res.status(404).json();
-            if (!bCrypt.compareSync(password, user.password)) res.status(401).json();
+            if (user == null) return res.status(404).json();
+            if (!bCrypt.compareSync(password, user.password)) return res.status(401).json();
 
             // update the last login time of the user and return jwt in response
             user.updateLastLogin((err, user) => {
@@ -38,7 +41,7 @@ router.post('/login', (req, res, next) => {
                 else {
                     // sign the payload and return the token in response
                     let token = jwt.sign(user.toJson(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
-                    res.json({'token': token});
+                    return res.json({'token': token});
                 }
             });
         }
@@ -51,11 +54,14 @@ router.get('/:userID', (req, res, next) => {
             userID
         }
     } = req;
-    Users.findById({_id: userID}, (err, user) => {
+
+    if (!mongoose.Types.ObjectId.isValid(userID)) return res.status(404).json();
+
+    Users.findById(userID, (err, user) => {
         if (err) next(err);
         else {
-            if (user == null) res.status(404).json();
-            res.json(user.toJson());
+            if (user == null) return res.status(404).json();
+            return res.json(user.toJson());
         }
     })
 })
