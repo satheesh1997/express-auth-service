@@ -9,8 +9,7 @@ const errorHandler = (err, req, res, next) => {
     }
 
     if(err instanceof MongooseErrors.ValidationError){
-        console.log(err);
-        res.status(500).json({"error": "Server Down"});
+        res.status(400).json(err);
     }
 }
 

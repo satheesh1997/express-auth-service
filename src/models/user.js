@@ -77,9 +77,16 @@ UserSchema.statics = {
 
 //methods
 UserSchema.methods = {
-    updateLastLogin: function () {
+    updateLastLogin: function (cb) {
         this.lastLogin = new Date();
-        this.save();
+        this.save(cb);
+    },
+    toJson: function () {
+        let userObj = this.toObject();
+
+        // delete the secret fields
+        delete userObj.password;
+        return userObj;
     }
 }
 
