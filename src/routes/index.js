@@ -21,4 +21,10 @@ router.get('/status', (req, res, next) => {
     });
 });
 
+router.get('/authpage', (req, res, next) =>{
+    console.log("hi");
+    res.render('login_page', {})
+})
+
+
 module.exports = router;

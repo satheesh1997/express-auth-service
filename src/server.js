@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const path = require('path');
 const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const userRouter = require('./routes/user');
@@ -28,6 +29,10 @@ db.once('open', () => {
     console.log(`Connected to MongoDB running in ${MONGO_URL}`);
 });
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+// view engine config
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 // app routers
 app.use('/', indexRouter);
