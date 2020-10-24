@@ -3,9 +3,8 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const indexRouter = require('./routes/index.js');
-const userRouter = require('./routes/user.js');
-
+const indexRouter = require('./routes/index');
+const userRouter = require('./routes/user');
 const middlewares = require('./middlewares');
 
 // app configurations

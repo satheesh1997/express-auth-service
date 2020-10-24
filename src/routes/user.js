@@ -3,7 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const middlewares = require('../middlewares');
-const Users = require('../models/user.js');
+const Users = require('../models/user');
 
 const router = express.Router();
 
