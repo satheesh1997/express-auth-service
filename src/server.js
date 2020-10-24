@@ -10,11 +10,13 @@ const middlewares = require('./middlewares');
 
 // app configurations
 const app = express();
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/tervu-auth';
-const PORT = process.env.PORT || 8000;
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 dotenv.config();
+
+// app constants
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/tervu-auth';
+const PORT = process.env.PORT || 8000;
 
 // MongoDB connection setup
 mongoose.connect(MONGO_URL, {
