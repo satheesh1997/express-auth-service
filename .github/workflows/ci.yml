@@ -24,6 +24,11 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
+    - name: JUnit Test Results
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: JUnit Test Results (Node.js ${{ matrix.node-version }})
+        path: junit.xml
     - run: npm install
     - run: npm test
