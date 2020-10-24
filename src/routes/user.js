@@ -1,11 +1,14 @@
 const bCrypt = require('bcrypt');
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const middlewares = require('../middlewares');
 const Users = require('../models/user.js');
 
 const router = express.Router();
 
-router.post('/create', (req, res, cb) => {
+// serviceAuth required routes
+router.post('/create', middlewares.machineAuthentication, (req, res, next) => {
     const userData = {
         username: req.body.username,
         firstName: req.body.firstName,
@@ -13,44 +16,88 @@ router.post('/create', (req, res, cb) => {
         email: req.body.email,
         password: req.body.password
     };
+
     Users.create(userData, (err, user) => {
-        if (err) return res.status(400).json(err);
-        return res.status(201).json({
-            _id: user._id
-        })
+        if (err) next(err);
+        else return res.status(201).json({_id: user._id});
     });
 });
 
-router.post('/login', (req, res, cb) => {
+router.get('/:userID', middlewares.machineAuthentication, (req, res, next) => {
+    const {
+        params: {
+            userID
+        }
+    } = req;
+
+    if (!mongoose.Types.ObjectId.isValid(userID)) return res.sendStatus(404);
+
+    Users.findById(userID, (err, user) => {
+        if (err) next(err);
+        else {
+            if (user == null) return res.sendStatus(404);
+            return res.json(user.toJson());
+        }
+    })
+});
+
+// userAuth required routes
+router.post('/login', middlewares.userAuthentication, (req, res, next) => {
+    if (req.user) {
+        return res.sendStatus(409);
+    }
     const {
         body: {
             email,
             password
         }
     } = req;
+
     Users.findByEmail(email, (err, user) => {
-        if (err) return res.status(400).json(err);
-        if (user == null) return res.status(404).json(); 
-        if (!bCrypt.compareSync(password, user.password)) return res.status(401).json();
-        // if (!user.isActive) return res.status(401).json({'message': 'User is not activated'});
+        if (err) next(err);
+        else {
+            if (user == null) return res.sendStatus(404);
+            if (!bCrypt.compareSync(password, user.password)) return res.sendStatus(401);
 
-        // update the last login time
-        user.updateLastLogin();
-
-        // return the jwt token in the response
-        const userData = {
-            _id: user.id,
-            email: user.email,
-            fullName: `${user.firstName} ${user.lastName}`,
-            isActive: user.isActive,
-            lastLogin: user.lastLogin
+            // update the last login time of the user and return jwt in response
+            user.updateLastLogin((err, user) => {
+                if (err) next(err);
+                else {
+                    // sign the payload and return the token in response
+                    let token = jwt.sign(user.toJson(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
+                    return res.json({'token': token});
+                }
+            });
         }
-
-        // generate a jwt token and send in response
-        let token = jwt.sign(userData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
-        return res.json({'token': token});
     });
+});
 
+router.post('/change-password', middlewares.userAuthentication, (req, res, next) => {
+    const {
+        user: {
+            _id
+        },
+        body: {
+            password,
+            confirm_password
+        }
+    } = req;
+
+    if (!password || !confirm_password) return res.status(400).json({'error': 'Provide both password & confirm password'});
+    if (password !== confirm_password) return res.status(400).json({'error': 'Passwords don\'t match'});
+
+    Users.findById(_id, (err, user) => {
+        if (err) next(err);
+        else {
+            if (user == null) return res.sendStatus(404);
+            user.setPassword(confirm_password, (err, user) => {
+                if (err) next(err);
+                else {
+                    return res.sendStatus(201);
+                }
+            })
+        }
+    })
 });
 
 module.exports = router;

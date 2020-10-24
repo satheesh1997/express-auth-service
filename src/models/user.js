@@ -15,12 +15,12 @@ const UserSchema = new mongoose.Schema(
         },
         firstName: {
             type: String,
-            required: true,
+            required: [true, 'First Name field required'],
             trim: true
         },
         lastName: {
             type: String,
-            required: true,
+            required:  [true, 'Last Name field required'],
             trim: true
         },
         email: {
@@ -77,14 +77,25 @@ UserSchema.statics = {
 
 //methods
 UserSchema.methods = {
-    updateLastLogin: function () {
+    updateLastLogin: function (cb) {
         this.lastLogin = new Date();
-        this.save();
+        this.save({ validateBeforeSave: false }, cb);
+    },
+    setPassword: function(newPassword, cb) {
+        this.password = newPassword;
+        this.save(cb);
+    },
+    toJson: function () {
+        let userObj = this.toObject();
+
+        // delete the secret fields
+        delete userObj.password;
+        return userObj;
     }
 }
 
 // plugins
-UserSchema.plugin(uniqueValidator);
+UserSchema.plugin(uniqueValidator, {message : '{PATH} already exists. Try different one.'});
 
 // signals
 UserSchema.pre('save', function(cb) {
@@ -93,7 +104,12 @@ UserSchema.pre('save', function(cb) {
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return cb();
 
-    // generate a salt
+    // skip password hash generation for new accounts without password
+    if(!user.password && user.isNew){
+        return cb();
+    }
+
+    // generate salt
     bCrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
         if (err) return cb(err);
 

@@ -4,19 +4,20 @@
   "description": "This is the authentication microservice for tervu.in",
   "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/server.js"
+    "start": "nodemon src/server.js",
+    "test": "jest --coverage --config ./jest.config.json",
+    "test:watch": "npm run test -- --watch"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/tervu/auth.git"
+    "url": "git+https://github.com/Tervu/auth-ms.git"
   },
   "author": "satheesh@tervu.in",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/tervu/auth/issues"
+    "url": "https://github.com/Tervu/auth-ms/issues"
   },
-  "homepage": "https://gitlab.com/tervu/auth#readme",
+  "homepage": "https://github.com/Tervu/auth-ms#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
@@ -27,8 +28,8 @@
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0"
   },
-  "db": {
-    "name": "tervu-auth",
-    "host": "127.0.0.1:27017"
+  "devDependencies": {
+    "jest": "^26.6.1",
+    "nodemon": "^2.0.6"
   }
 }
