@@ -104,7 +104,12 @@ UserSchema.pre('save', function(cb) {
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return cb();
 
-    // generate a salt
+    // skip password hash generation for new accounts without password
+    if(!user.password && user.isNew){
+        return cb();
+    }
+
+    // generate salt
     bCrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
         if (err) return cb(err);
 
