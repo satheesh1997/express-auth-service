@@ -79,6 +79,10 @@ UserSchema.statics = {
 UserSchema.methods = {
     updateLastLogin: function (cb) {
         this.lastLogin = new Date();
+        this.save({ validateBeforeSave: false }, cb);
+    },
+    setPassword: function(newPassword, cb) {
+        this.password = newPassword;
         this.save(cb);
     },
     toJson: function () {

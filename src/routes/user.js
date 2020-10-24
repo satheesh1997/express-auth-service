@@ -2,11 +2,13 @@ const bCrypt = require('bcrypt');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const middlewares = require('../middlewares');
 const Users = require('../models/user.js');
 
 const router = express.Router();
 
-router.post('/create', (req, res, next) => {
+// serviceAuth required routes
+router.post('/create', middlewares.machineAuthentication, (req, res, next) => {
     const userData = {
         username: req.body.username,
         firstName: req.body.firstName,
@@ -21,7 +23,29 @@ router.post('/create', (req, res, next) => {
     });
 });
 
-router.post('/login', (req, res, next) => {
+router.get('/:userID', middlewares.machineAuthentication, (req, res, next) => {
+    const {
+        params: {
+            userID
+        }
+    } = req;
+
+    if (!mongoose.Types.ObjectId.isValid(userID)) return res.sendStatus(404);
+
+    Users.findById(userID, (err, user) => {
+        if (err) next(err);
+        else {
+            if (user == null) return res.sendStatus(404);
+            return res.json(user.toJson());
+        }
+    })
+});
+
+// userAuth required routes
+router.post('/login', middlewares.userAuthentication, (req, res, next) => {
+    if (req.user) {
+        return res.sendStatus(409);
+    }
     const {
         body: {
             email,
@@ -32,8 +56,8 @@ router.post('/login', (req, res, next) => {
     Users.findByEmail(email, (err, user) => {
         if (err) next(err);
         else {
-            if (user == null) return res.status(404).json();
-            if (!bCrypt.compareSync(password, user.password)) return res.status(401).json();
+            if (user == null) return res.sendStatus(404);
+            if (!bCrypt.compareSync(password, user.password)) return res.sendStatus(401);
 
             // update the last login time of the user and return jwt in response
             user.updateLastLogin((err, user) => {
@@ -48,22 +72,32 @@ router.post('/login', (req, res, next) => {
     });
 });
 
-router.get('/:userID', (req, res, next) => {
+router.post('/change-password', middlewares.userAuthentication, (req, res, next) => {
     const {
-        params: {
-            userID
+        user: {
+            _id
+        },
+        body: {
+            password,
+            confirm_password
         }
     } = req;
 
-    if (!mongoose.Types.ObjectId.isValid(userID)) return res.status(404).json();
+    if (!password || !confirm_password) return res.status(400).json({'error': 'Provide both password & confirm password'});
+    if (password !== confirm_password) return res.status(400).json({'error': 'Passwords don\'t match'});
 
-    Users.findById(userID, (err, user) => {
+    Users.findById(_id, (err, user) => {
         if (err) next(err);
         else {
-            if (user == null) return res.status(404).json();
-            return res.json(user.toJson());
+            if (user == null) return res.sendStatus(404);
+            user.setPassword(confirm_password, (err, user) => {
+                if (err) next(err);
+                else {
+                    return res.sendStatus(201);
+                }
+            })
         }
     })
-})
+});
 
 module.exports = router;
