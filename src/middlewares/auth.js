@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const mongooseUniqueValidator = require('mongoose-unique-validator');
 
 const authenticateJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
