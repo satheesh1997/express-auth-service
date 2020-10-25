@@ -14,6 +14,69 @@ const userData = {
 const createUser = (cb) => User.create(userData, cb);
 
 /**
+ * User schema test suite.
+ */
+describe('UserSchema', () => {
+    it('saving user should throw validation error if the email is not valid', done => {
+        const userData = {
+            firstName: 'Continous',
+            lastName: 'Integration',
+            email: 'citervu.in',
+            password: 'test1234567'
+        }
+
+        // not using createUser as i need to create with invalid email
+        User.create(userData, (err, cUser) => {
+            try {
+                expect(err).not.toBe(undefined);
+                expect(cUser).toBe(undefined);
+                expect(err._message).toEqual('User validation failed');
+                done();
+            } catch (error) {
+                done(error);
+            }
+        });
+    });
+    it('saving user should throw validation error if the password is not valid', done => {
+        const userData = {
+            firstName: 'Continous',
+            lastName: 'Integration',
+            email: 'citervu.in',
+            password: 'test'
+        }
+
+        // not using createUser as i need to create with invalid password
+        User.create(userData, (err, cUser) => {
+            try {
+                expect(err).not.toBe(null);
+                expect(cUser).toBe(undefined);
+                expect(err._message).toEqual('User validation failed');
+                done();
+            } catch (error) {
+                done(error);
+            }
+        });
+    });
+    it('saving user without password should not throw error', done => {
+        const userData = {
+            firstName: 'Continous',
+            lastName: 'Integration',
+            email: 'ci@tervu.in'
+        }
+
+        // not using createUser as i need to create with no password
+        User.create(userData, (err, cUser) => {
+            try {
+                expect(err).toBe(null);
+                done();
+            } catch (error) {
+                done(error);
+            }
+        });
+    });
+});
+
+/**
  * User methods test suite.
  */
 describe('User.methods', () => {
@@ -83,69 +146,6 @@ describe('User.methods', () => {
             }
         })
     })
-});
-
-/**
- * User schema test suite.
- */
-describe('UserSchema', () => {
-    it('saving user should throw validation error if the email is not valid', done => {
-        const userData = {
-            firstName: 'Continous',
-            lastName: 'Integration',
-            email: 'citervu.in',
-            password: 'test1234567'
-        }
-
-        // not using createUser as i need to create with invalid email
-        User.create(userData, (err, cUser) => {
-            try {
-                expect(err).not.toBe(undefined);
-                expect(cUser).toBe(undefined);
-                expect(err._message).toEqual('User validation failed');
-                done();
-            } catch (error) {
-                done(error);
-            }
-        });
-    });
-    it('saving user should throw validation error if the password is not valid', done => {
-        const userData = {
-            firstName: 'Continous',
-            lastName: 'Integration',
-            email: 'citervu.in',
-            password: 'test'
-        }
-
-        // not using createUser as i need to create with invalid password
-        User.create(userData, (err, cUser) => {
-            try {
-                expect(err).not.toBe(null);
-                expect(cUser).toBe(undefined);
-                expect(err._message).toEqual('User validation failed');
-                done();
-            } catch (error) {
-                done(error);
-            }
-        });
-    });
-    it('saving user without password should not throw error', done => {
-        const userData = {
-            firstName: 'Continous',
-            lastName: 'Integration',
-            email: 'ci@tervu.in'
-        }
-
-        // not using createUser as i need to create with no password
-        User.create(userData, (err, cUser) => {
-            try {
-                expect(err).toBe(null);
-                done();
-            } catch (error) {
-                done(error);
-            }
-        });
-    });
 });
 
 /**
