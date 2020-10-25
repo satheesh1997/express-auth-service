@@ -34,6 +34,9 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// static file config
+app.use('/static', express.static(path.join(__dirname, 'static')));
+
 // app routers
 app.use('/', indexRouter);
 app.use('/users', userRouter);
