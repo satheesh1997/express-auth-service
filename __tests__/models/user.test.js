@@ -1,6 +1,5 @@
 const testDb = require('../db');
 const User = require('../../src/models/user');
-const { deleteOne } = require('../../src/models/user');
 
 beforeAll(async () => await testDb.connect());
 afterEach(async () => await testDb.clearDatabase());
