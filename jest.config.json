@@ -2,6 +2,16 @@
     "testRegex": "((\\.|/*.)(test))\\.js?$",
     "reporters": [ 
         "default",
-        "jest-junit"
-    ]
+        [
+            "jest-junit",
+            {
+                "suiteName": "Tervu auth service unit tests",
+                "usePathForSuiteName": true,
+                "suiteNameTemplate": "{filepath}",
+                "classNameTemplate": "{classname}",
+                "titleTemplate": "{title}"
+            }
+        ]
+    ],
+    "testEnvironment": "node"
 }

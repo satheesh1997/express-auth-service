@@ -3,7 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const middlewares = require('../middlewares');
-const Users = require('../models/user');
+const User = require('../models/user');
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.post('/create', middlewares.machineAuthentication, (req, res, next) => {
         password: req.body.password
     };
 
-    Users.create(userData, (err, user) => {
+    User.create(userData, (err, user) => {
         if (err) next(err);
         else return res.status(201).json({_id: user._id});
     });
@@ -32,7 +32,7 @@ router.get('/:userID', middlewares.machineAuthentication, (req, res, next) => {
 
     if (!mongoose.Types.ObjectId.isValid(userID)) return res.sendStatus(404);
 
-    Users.findById(userID, (err, user) => {
+    User.findById(userID, (err, user) => {
         if (err) next(err);
         else {
             if (user == null) return res.sendStatus(404);
@@ -53,7 +53,7 @@ router.post('/login', middlewares.userAuthentication, (req, res, next) => {
         }
     } = req;
 
-    Users.findByEmail(email, (err, user) => {
+    User.findByEmail(email, (err, user) => {
         if (err) next(err);
         else {
             if (user == null) return res.sendStatus(404);
@@ -84,9 +84,9 @@ router.post('/change-password', middlewares.userAuthentication, (req, res, next)
     } = req;
 
     if (!password || !confirm_password) return res.status(400).json({'error': 'Provide both password & confirm password'});
-    if (password !== confirm_password) return res.status(400).json({'error': 'Passwords don\'t match'});
+    if (password !== confirm_password) return res.status(400).json({'error': 'Password\'s don\'t match'});
 
-    Users.findById(_id, (err, user) => {
+    User.findById(_id, (err, user) => {
         if (err) next(err);
         else {
             if (user == null) return res.sendStatus(404);
