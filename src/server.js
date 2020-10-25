@@ -4,8 +4,9 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const path = require('path');
 const mongoose = require('mongoose');
-const indexRouter = require('./routes/index');
-const userRouter = require('./routes/user');
+const indexRouter = require('./routes/index.js');
+const userRouter = require('./routes/user.js');
+
 const middlewares = require('./middlewares');
 
 // app configurations
@@ -15,8 +16,10 @@ app.use(morgan('combined'));
 dotenv.config();
 
 // app constants
+const NODE_ENV = process.env.NODE_ENV;
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/tervu-auth';
 const PORT = process.env.PORT || 8000;
+const DOMAIN = process.env.DOMAIN;
 
 // MongoDB connection setup
 mongoose.connect(MONGO_URL, {
@@ -41,9 +44,12 @@ app.use('/static', express.static(path.join(__dirname, 'static')));
 app.use('/', indexRouter);
 app.use('/users', userRouter);
 
-// app middlewares
+// error handling
 app.use(middlewares.errorHandler());
 
 app.listen(PORT, () => {
-    console.log(`Service is running on http://127.0.0.1:${PORT}`);
+    if (NODE_ENV == "local")
+        console.log(`Service is running on http://${DOMAIN}:${PORT}`);
+    else
+        console.log(`Service is running on http://127.0.0.1:${PORT}`);
 });
