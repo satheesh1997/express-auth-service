@@ -20,6 +20,22 @@ function login(emailElement, passwordElement) {
         console.log('Success');
     }) .fail(function(){
         $('#errorAlert').removeClass('invisible');
+
         loginSpin.toggleClass('myFade');
+        loginBtn.prop('disabled', false);
+    })
+}
+
+
+function forgetPassword() {
+    let resetEmail = $('#resetEmail').val();
+    $.ajax({
+        method: 'post',
+        url: '/users/forgot',
+        data: JSON.stringify({email: resetEmail})
+    }).done(function(){
+        console.log('Success')
+    }).fail(function(){
+        console.log("failed");
     })
 }
