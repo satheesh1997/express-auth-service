@@ -16,7 +16,7 @@ const createUser = (cb) => User.create(userData, cb);
 /**
  * User methods test suite.
  */
-describe('methods', () => {
+describe('User.methods', () => {
     it('.updateLastLogin() is updating lastLogin', done => {
         createUser((err, cUser) => {
             // initially lastLogin will be undefined
@@ -88,7 +88,7 @@ describe('methods', () => {
 /**
  * User schema test suite.
  */
-describe('schema', () => {
+describe('UserSchema', () => {
     it('saving user should throw validation error if the email is not valid', done => {
         const userData = {
             firstName: 'Continous',
@@ -151,7 +151,7 @@ describe('schema', () => {
 /**
  * User statics test suite.
  */
-describe('statics', () => {
+describe('User.statics', () => {
     it('.create() is creating a user', done => {
         User.create(userData, (err, user) => {
             try {
