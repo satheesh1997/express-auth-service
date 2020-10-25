@@ -1,7 +1,4 @@
 {
     "testRegex": "((\\.|/*.)(test))\\.js?$",
-    "reporters": [ 
-        "default",
-        "jest-junit"
-    ]
+    "testEnvironment": "node"
 }

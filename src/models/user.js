@@ -9,7 +9,6 @@ const UserSchema = new mongoose.Schema(
         username: {
             type: String,
             trim: true,
-            required: true,
             unique: true,
             index: true
         },
@@ -124,4 +123,4 @@ UserSchema.pre('save', function(cb) {
     });
 });
 
-module.exports = mongoose.model('Users', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

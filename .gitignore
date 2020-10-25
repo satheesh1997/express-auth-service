@@ -4,4 +4,5 @@ node_modules
 .DS_Store
 .env
 
+test_result.json
 junit.xml
