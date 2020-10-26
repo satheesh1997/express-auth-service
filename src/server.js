@@ -13,7 +13,11 @@ const middlewares = require('./middlewares');
 const app = express();
 app.use(bodyParser.json());
 app.use(morgan('combined'));
-dotenv.config();
+
+if(process.env.NODE_ENV === "DEV")
+    dotenv.config({path: path.resolve(process.cwd(), '.env.dev')});
+else
+    dotenv.config();
 
 // app constants
 const NODE_ENV = process.env.NODE_ENV;

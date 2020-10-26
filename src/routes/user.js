@@ -72,7 +72,7 @@ router.post('/login', middlewares.userAuthentication, (req, res, next) => {
                         token,
                         {
                             domain: process.env.DOMAIN || 'localhost',
-                            secure: true,
+                            secure: process.env.SECURE,
                             expires: new Date(Date.now() + 85500000) // cookie will expire 15mins before the token expires
                         }
                     );

@@ -5,6 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "nodemon src/server.js",
+    "dev": "NODE_ENV=DEV nodemon src/server.js",
     "ci": "jest --runInBand --coverage --config ./jest.config.json --json --outputFile=test_result.json --testLocationInResults",
     "test": "jest --runInBand --coverage --config ./jest.config.json"
   },
