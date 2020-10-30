@@ -33,14 +33,18 @@ function login(emailElement, passwordElement) {
 
 
 function forgetPassword() {
-    let resetEmail = $('#resetEmail').val();
+    let resetEmail = $('#resetEmail1').val();
+    $('#resetEmail1').removeClass('is-invalid');
+    // $('#resetEmailMsg').addClass('invisible');
     $.ajax({
         method: 'post',
-        url: '/users/forgot',
+        url: '/forgot-password',
+        contentType: 'application/json',
         data: JSON.stringify({email: resetEmail})
     }).done(function(){
-        console.log('Success')
+      $('#successDialog').modal('show');
     }).fail(function(){
-        console.log("failed");
+        $('#resetEmail1').addClass('is-invalid');
+        $('#resetEmailMsg').removeClass('invisible');
     })
 }
