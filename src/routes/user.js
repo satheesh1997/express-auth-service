@@ -42,7 +42,7 @@ router.get('/:userID', middlewares.machineAuthentication, (req, res, next) => {
 });
 
 // userAuth required routes
-router.post('/login', middlewares.userAuthentication, (req, res, next) => {
+router.post('/login', middlewares.sessionAuthentication, (req, res, next) => {
     if (req.user) {
         return res.sendStatus(409);
     }
@@ -83,7 +83,7 @@ router.post('/login', middlewares.userAuthentication, (req, res, next) => {
     });
 });
 
-router.post('/change-password', middlewares.userAuthentication, (req, res, next) => {
+router.post('/change-password', middlewares.sessionAuthentication, (req, res, next) => {
     const {
         user: {
             _id

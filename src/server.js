@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const path = require('path');
@@ -12,6 +13,7 @@ const middlewares = require('./middlewares');
 // app configurations
 const app = express();
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(morgan('combined'));
 
 if(process.env.NODE_ENV === "DEV")

@@ -1,6 +1,7 @@
 const customErrorHandler = require('./error_handler')
-const { authenticateJWT, authenticateMachineToken } = require('./auth');
+const { authenticateJWT, authenticateMachineToken, authenticateSessionToken } = require('./auth');
 
-module.exports.userAuthentication = authenticateJWT;
+module.exports.tokenAuthentication = authenticateJWT;
 module.exports.machineAuthentication = authenticateMachineToken;
+module.exports.sessionAuthentication = authenticateSessionToken;
 module.exports.errorHandler = customErrorHandler;
