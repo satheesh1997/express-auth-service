@@ -37,6 +37,7 @@ const authenticateSessionToken = (req, res, next) => {
                 if (req.originalUrl == "/") return res.redirect('/services/');
                 
                 // if the uri is not / proceed further
+                req.user = user;
                 next();
             }
         });
