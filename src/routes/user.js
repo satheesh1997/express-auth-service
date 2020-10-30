@@ -42,7 +42,7 @@ router.get('/:userID', middlewares.machineAuthentication, (req, res, next) => {
 });
 
 // userAuth required routes
-router.post('/login', middlewares.userAuthentication, (req, res, next) => {
+router.post('/login', middlewares.sessionAuthentication, (req, res, next) => {
     if (req.user) {
         return res.sendStatus(409);
     }
@@ -65,6 +65,17 @@ router.post('/login', middlewares.userAuthentication, (req, res, next) => {
                 else {
                     // sign the payload and return the token in response
                     let token = jwt.sign(user.toJson(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
+
+                    // set jwt token in the cookie
+                    res.cookie(
+                        '_token',
+                        token,
+                        {
+                            domain: process.env.TOKEN_DOMAIN,
+                            secure: process.env.PROTOCOL === "http" ? false : true,
+                            expires: new Date(Date.now() + 85500000) // cookie will expire 15mins before the token expires
+                        }
+                    );
                     return res.json({'token': token});
                 }
             });
@@ -72,7 +83,7 @@ router.post('/login', middlewares.userAuthentication, (req, res, next) => {
     });
 });
 
-router.post('/change-password', middlewares.userAuthentication, (req, res, next) => {
+router.post('/change-password', middlewares.sessionAuthentication, (req, res, next) => {
     const {
         user: {
             _id
