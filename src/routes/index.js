@@ -1,4 +1,6 @@
+const constants = require('../constants');
 const express = require('express');
+const jwt = require("jsonwebtoken");
 const middlewares = require('../middlewares');
 const mongoose = require('mongoose');
 const router = express.Router();
@@ -19,7 +21,15 @@ router.post('/forgot-password/', (req, res, next) => {
         if (err) return next(err);
         if (user == null) return res.sendStatus(404);
 
-        // TODO: need to update the email sending logic here
+        const confirmToken = jwt.sign(
+            {'_id': user._id},
+            constants.FORGOT_PASSWORD_SECRET, 
+            { expiresIn: '5m' }
+        );
+        const forgotPasswordURL = `${process.env.PROTOCOL}://${process.env.DOMAIN}/change-password/${confirmToken}/`;
+
+        if (process.env.NODE_ENV === "DEV") console.log(forgotPasswordURL);
+
         return res.sendStatus(200);
     });
 });

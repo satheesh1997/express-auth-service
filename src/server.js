@@ -54,5 +54,5 @@ app.use('/users', userRouter);
 app.use(middlewares.errorHandler());
 
 app.listen(PORT, () => {
-    console.log(`Service is running on ${PROTOCOL}://${DOMAIN}:${PORT}`);
+    console.log(`Service is running on ${PROTOCOL}://${DOMAIN}`);
 });
