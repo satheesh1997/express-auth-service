@@ -20,10 +20,10 @@ else
     dotenv.config();
 
 // app constants
-const NODE_ENV = process.env.NODE_ENV;
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/tervu-auth';
-const PORT = process.env.PORT || 8000;
 const DOMAIN = process.env.DOMAIN;
+const MONGO_URL = process.env.MONGO_URL;
+const PORT = process.env.PORT;
+const PROTOCOL = process.env.PROTOCOL;
 
 // MongoDB connection setup
 mongoose.connect(MONGO_URL, {
@@ -52,8 +52,5 @@ app.use('/users', userRouter);
 app.use(middlewares.errorHandler());
 
 app.listen(PORT, () => {
-    if (NODE_ENV == "local")
-        console.log(`Service is running on http://${DOMAIN}:${PORT}`);
-    else
-        console.log(`Service is running on http://127.0.0.1:${PORT}`);
+    console.log(`Service is running on ${PROTOCOL}://${DOMAIN}:${PORT}`);
 });
