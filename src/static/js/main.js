@@ -17,7 +17,12 @@ function login(emailElement, passwordElement) {
         contentType: 'application/json',
         data: JSON.stringify({ email, password})
     }). done(function(){
-        console.log('Success');
+        const query = new URLSearchParams(window.location.search);
+        if(query.has('next')){
+            window.location.replace(query.get('next'));
+        } else {
+            window.location.replace("/services/");
+        }
     }) .fail(function(){
         $('#errorAlert').removeClass('invisible');
 
