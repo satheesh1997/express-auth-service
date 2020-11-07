@@ -6,12 +6,6 @@ const SALT_WORK_FACTOR = 10;
 
 const UserSchema = new mongoose.Schema(
     {
-        username: {
-            type: String,
-            trim: true,
-            unique: true,
-            index: true
-        },
         firstName: {
             type: String,
             required: [true, 'First Name field required'],
