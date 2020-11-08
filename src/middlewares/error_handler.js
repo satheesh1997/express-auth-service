@@ -18,6 +18,7 @@ const errorHandler = (err, req, res, next) => {
     if(err instanceof MongooseErrors.ValidationError){
         res.status(400).json(validationErrorFormat(err));
     } else {
+        console.log(err);
         res.sendStatus(500);
     }
 }
