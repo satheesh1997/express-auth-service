@@ -9,7 +9,7 @@ const userData = {
     firstName: 'Continous',
     lastName: 'Integration',
     email: 'ci@tervu.in',
-    password: 'testingpassword'
+    password: 'Hello123@'
 }
 const createUser = (cb) => User.create(userData, cb);
 
@@ -22,7 +22,7 @@ describe('UserSchema', () => {
             firstName: 'Continous',
             lastName: 'Integration',
             email: 'citervu.in',
-            password: 'test1234567'
+            password: 'Hello123@'
         }
 
         // not using createUser as i need to create with invalid email
@@ -121,7 +121,7 @@ describe('User.methods', () => {
         User.create(userData, (err, cUser) => {
             try {
                 expect(cUser.password).toBe(undefined);
-                cUser.setPassword('iamtestingthis', (err, user) => {
+                cUser.setPassword('Hello123@', (err, user) => {
                     try {
                         expect(user.password).not.toBe(undefined);
                         done();

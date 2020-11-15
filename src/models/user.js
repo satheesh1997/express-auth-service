@@ -32,9 +32,9 @@ const UserSchema = new mongoose.Schema(
             type: String,
             validate: {
                 validator: v => {
-                    return /^[A-Za-z]\w{7,14}$/.test(v);
+                    return /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(v);
                 },
-                message: () => 'password must be 7 to 15 characters which contain only characters, numeric digits, underscore and first character must be a letter'
+                message: () => 'Password must be atleast 8 chars in length with at least 1 upper case letter, at least 1 lower case letter, at least 1 number or special character'
             }
         },
         isActive: {

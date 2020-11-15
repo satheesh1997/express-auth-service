@@ -6,8 +6,19 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const User = require('../models/user');
 
-router.get('/', middlewares.sessionAuthentication, (req, res, next) =>{
+router.get('/', middlewares.sessionAuthentication, (req, res, next) => {
     res.render('login_page', {})
+});
+
+router.get('/me/', middlewares.tokenAuthentication, (req, res, next) => {
+    let userObj = req.user;
+
+    // remove unnecessary data from userObj
+    delete userObj.iat;
+    delete userObj.exp;
+    delete userObj.__v;
+
+    return res.status(200).json(userObj);
 });
 
 router.post('/forgot-password/', (req, res, next) => {

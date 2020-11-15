@@ -1,22 +1,24 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const path = require('path');
 const mongoose = require('mongoose');
 const indexRouter = require('./routes/index.js');
+const middlewares = require('./middlewares');
 const userRouter = require('./routes/user.js');
 
-const middlewares = require('./middlewares');
+const app = express();
 
 // app configurations
-const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan('combined'));
+app.use(cors());
 
-if(process.env.NODE_ENV === "DEV")
+if(process.env.NODE_ENV === 'DEV')
     dotenv.config({path: path.resolve(process.cwd(), '.env.dev')});
 else
     dotenv.config();
