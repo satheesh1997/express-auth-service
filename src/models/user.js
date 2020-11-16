@@ -70,6 +70,10 @@ UserSchema.statics = {
 
 //methods
 UserSchema.methods = {
+    activate: function (cb) {
+        this.isActive = true;
+        this.save(cb);
+    },
     updateLastLogin: function (cb) {
         this.lastLogin = new Date();
         this.save({ validateBeforeSave: false }, cb);

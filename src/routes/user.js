@@ -40,6 +40,27 @@ router.get('/:userID', middlewares.machineAuthentication, (req, res, next) => {
     })
 });
 
+router.get('/activate/:userID', middlewares.machineAuthentication, (req, res, next) => {
+    const {
+        params: {
+            userID
+        }
+    } = req;
+
+    if (!mongoose.Types.ObjectId.isValid(userID)) return res.sendStatus(404);
+
+    User.findById(userID, (err, user) => {
+        if (err) next(err);
+        else {
+            if (user == null) return res.sendStatus(404);
+            user.activate((err, user) => {
+                if (err) next(err);
+                else return res.sendStatus(200);
+            })
+        }
+    })
+})
+
 // userAuth required routes
 router.post('/login', middlewares.sessionAuthentication, (req, res, next) => {
     if (req.user) {

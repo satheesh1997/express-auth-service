@@ -80,6 +80,24 @@ describe('UserSchema', () => {
  * User methods test suite.
  */
 describe('User.methods', () => {
+    it('.activate is setting isActive to true', done => {
+        createUser((err, cUser) => {
+            // .isActive will be false initially
+            try {
+                expect(cUser.isActive).toBe(false);
+                cUser.activate((err, user) => {
+                    try {
+                        expect(user.isActive).toBe(true);
+                        done();
+                    } catch (error) {
+                        done(error);
+                    }
+                })
+            } catch (error) {
+                done(error);
+            }
+        });
+    });
     it('.updateLastLogin() is updating lastLogin', done => {
         createUser((err, cUser) => {
             // initially lastLogin will be undefined
