@@ -8,7 +8,6 @@ const authenticateJWT = (req, res, next) => {
 
         jwt.verify(tokenJWT, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
             if (err) return res.sendStatus(403);
-            if (user.isActive == false) return res.sendStatus(403);
             req.user = user;
             next();
         });
@@ -34,10 +33,9 @@ const authenticateSessionToken = (req, res, next) => {
                 else return res.sendStatus(403);
             }
             else {
-                if (user.isActive == false) return res.sendStatus(403);
-                // if the uri is / redirect to /services 
+                // if the uri is / redirect to /services
                 if (req.originalUrl == "/") return res.redirect('/services/');
-                
+
                 // if the uri is not / proceed further
                 req.user = user;
                 next();
