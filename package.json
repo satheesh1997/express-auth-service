@@ -1,7 +1,7 @@
 {
-  "name": "tervu-auth-service",
+  "name": "express-auth-service",
   "version": "1.0.0",
-  "description": "This is the authentication microservice for tervu.in",
+  "description": "",
   "main": "src/server.js",
   "scripts": {
     "start": "nodemon src/server.js",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tervu/auth-ms.git"
+    "url": "git+https://github.com/satheesh1997/express-auth-service/.git"
   },
   "author": "satheesh@tervu.in",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Tervu/auth-ms/issues"
+    "url": "https://github.com/satheesh1997/express-auth-service//issues"
   },
-  "homepage": "https://github.com/Tervu/auth-ms#readme",
+  "homepage": "https://github.com/satheesh1997/express-auth-service/#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
